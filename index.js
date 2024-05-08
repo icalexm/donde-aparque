@@ -12,5 +12,7 @@ function pulsa(el) {
       element.classList.remove("aqui");
     });
     el.classList.add("aqui");
+    const fecha = new Date();
+    window.ultimaFichada.innerHTML = fecha.toLocaleString();
   }
 }
