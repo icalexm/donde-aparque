@@ -7,7 +7,8 @@
 .calle-h,
 .calle-v,
 .calle-v1 {
-  background-color: aqua;
+  /*background-color: aqua;*/
+  position: relative;
 }
 
 .calle-h {
@@ -37,6 +38,15 @@
 .desc {
   position: absolute;
 }
-.aqui {
+
+.calle-h .desc {
+  top: -20px;
+}
+.calle-v .desc {
+  writing-mode: tb;
+  top: 50px;
+  right: -20px;
+}
+.calle-v .aqui {
   background-color: green;
 }
