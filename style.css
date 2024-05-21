@@ -5,8 +5,7 @@
 }
 
 .calle-h,
-.calle-v,
-.calle-v1 {
+.calle-v {
   /*background-color: aqua;*/
   position: relative;
 }
@@ -25,8 +24,17 @@
   flex-direction: column;
 }
 
-.calle-v1 {
+.calle-v.item-1 {
   height: 50px;
+}
+.calle-v.item-2 {
+  height: 100px;
+}
+.calle-h.item-1 {
+  width: 50px;
+}
+.calle-h.item-2 {
+  width: 100px;
 }
 
 .posicion {

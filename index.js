@@ -1,4 +1,12 @@
 const $miBarrio = window.miBarrio;
+const columnas = 3,
+  filas = 4,
+  callejero = [
+    ["h0", "v", "h"],
+    ["h Dia 13 (8 a 12)", "v", "h"],
+    ["h", "v", "h"],
+    ["h", "v1", "h0"],
+  ];
 
 document.addEventListener("touchstart", (e) => {
   pulsa(e.target);
@@ -12,7 +20,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const aqui = localStorage.getItem("marcat"),
     fechaStr = localStorage.getItem("marcatData");
   if (aqui) {
-    document.getElementById(aqui).classList.add("aqui");
+    let $aqui = document.getElementById(aqui);
+    if ($aqui) $aqui.classList.add("aqui");
     window.ultimaFichada.innerHTML = fechaStr;
   }
 });
@@ -35,37 +44,83 @@ function pulsa(el) {
 }
 
 function pintaPantalla() {
+  // let str = "",
+  //   i = 1,
+  //   col = 3;
+  // col = 0;
+  // str += pintaCalle("calle-h", col, "", i);
+  // col = 3;
+  // i += col;
+  // str += pintaCalle("calle-v", col, "", i);
+  // i += col;
+  // str += pintaCalle("calle-h", col, "", i);
+  // i += col;
+
+  // str += pintaCalle("calle-h", col, "Dia 13 (8 a 12)", i);
+  // i += col;
+  // str += pintaCalle("calle-v", col, "", i);
+  // i += col;
+  // str += pintaCalle("calle-h", col, "", i);
+  // i += col;
+
+  // str += pintaCalle("calle-h", col, "", i);
+  // i += col;
+  // str += pintaCalle("calle-v", col, "", i);
+  // i += col;
+  // str += pintaCalle("calle-h", col, "", i);
+  // i += col;
+
+  // str += pintaCalle("calle-h", col, "", i);
+  // i += col;
+  // col = 1;
+  // str += pintaCalle("calle-v", col, "", i);
+  // i += col;
+
   let str = "",
-    i = 1,
-    col = 3;
-  col = 0;
-  str += pintaCalle("calle-h", col, "", i);
-  col = 3;
-  i += col;
-  str += pintaCalle("calle-v", col, "", i);
-  i += col;
-  str += pintaCalle("calle-h", col, "", i);
-  i += col;
+    calle = "",
+    colstr = "",
+    col = columnas,
+    desc = "",
+    id = 1;
 
-  str += pintaCalle("calle-h", col, "Dia 13 (8 a 12)", i);
-  i += col;
-  str += pintaCalle("calle-v", col, "", i);
-  i += col;
-  str += pintaCalle("calle-h", col, "", i);
-  i += col;
+  for (let x = 0; x < filas; x++) {
+    //console.log(callejero[x]);
+    for (let y = 0; y < columnas; y++) {
+      console.log(callejero[x][y]);
+      switch (callejero[x][y].substring(0, 1)) {
+        case "v":
+          calle = "calle-v";
+          break;
 
-  str += pintaCalle("calle-h", col, "", i);
-  i += col;
-  str += pintaCalle("calle-v", col, "", i);
-  i += col;
-  str += pintaCalle("calle-h", col, "", i);
-  i += col;
+        case "h":
+          calle = "calle-h";
+          break;
 
-  str += pintaCalle("calle-h", col, "", i);
-  i += col;
-  col = 1;
-  str += pintaCalle("calle-v", col, "", i);
-  i += col;
+        default:
+          alert(`el callejero está mal definido ${callejero[x][y]}`);
+          break;
+      }
+      if (callejero[x][y].length >= 2) {
+        colstr = callejero[x][y].substring(1, 2);
+        if (colstr.trim().length === 0) {
+          col = 3;
+        } else {
+          col = parseInt(colstr);
+          calle += " item-" + col.toString();
+        }
+      } else {
+        col = 3;
+      }
+      if (callejero[x][y].length > 2) {
+        desc += callejero[x][y].substring(2, callejero[x][y].length);
+      } else {
+        desc = "";
+      }
+      str += pintaCalle(calle, col, desc, id);
+      id += col;
+    }
+  }
+
   $miBarrio.innerHTML = str;
 }
 
