@@ -10,7 +10,7 @@ let mapaCols = localStorage.getItem("mapaCols") | 3,
           .map((e) => e.split(","))
       : [
           ["h0", "v", "h"],
-          ["h Dia 13 (8 a 12)", "v", "h"],
+          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque"],
           ["h", "v", "h"],
           ["h", "v1", "h0"],
         ];
@@ -46,7 +46,7 @@ function clickConfirGuardar(e) {
   str = orientacion.value;
   if (dividir.value) str += dividir.value;
   if (diaLimpia.value && diaLimpia.value > 0) {
-    str += " Dia ";
+    str += "#Dia ";
     str += diaLimpia.value;
   }
   if (
@@ -59,6 +59,7 @@ function clickConfirGuardar(e) {
     str += horaFinLimpieza.value;
     str += ")";
   }
+  if (desc.value.trim().length > 0) str += "#" + desc.value.trim();
 
   console.log(window.id.value, str, callejero);
   let id = window.id.value,
@@ -88,6 +89,7 @@ function LimpiaModif() {
   diaLimpia.value = "";
   horaIniLimpieza.value = "";
   horaFinLimpieza.value = "";
+  desc.value = "";
 }
 function clickItemCalle(e) {
   //console.log(e.target);
@@ -96,16 +98,18 @@ function clickItemCalle(e) {
     idxy = id.split("_"),
     x = parseInt(idxy[1]),
     y = parseInt(idxy[2]),
-    desc = $el.dataset.desc,
-    descAtt = desc.split(" "),
-    dia = parseInt(descAtt[1]) | 0,
-    ini = parseInt(descAtt[2]?.split("(")[1]) | 0,
-    fin = parseInt(descAtt[4]?.split(")")[0]) | 0,
+    descDia = $el.dataset.descdia,
+    descDiaAtt = descDia.split(" "),
+    dia = parseInt(descDiaAtt[1]) | 0,
+    ini = parseInt(descDiaAtt[2]?.split("(")[1]) | 0,
+    fin = parseInt(descDiaAtt[4]?.split(")")[0]) | 0,
     col = $el.dataset.col,
-    orienta = $el.dataset.orienta;
+    orienta = $el.dataset.orienta,
+    desc = $el.dataset.desc;
   window.id.value = id;
   window.orientacion.value = orienta;
   window.dividir.value = orienta;
+  window.desc.value = desc;
   window.diaLimpia.value = dia;
   window.horaIniLimpieza.value = ini;
   window.horaFinLimpieza.value = fin;
@@ -126,6 +130,7 @@ function pintaPantalla() {
     clase = "",
     colstr = "",
     col = " ",
+    descDia = "",
     desc = "",
     id = 1;
 
@@ -137,6 +142,7 @@ function pintaPantalla() {
         orienta = "";
         clase = "";
         col = " ";
+        descDia = "";
         desc = "";
       } else {
         if (callejero[x] && callejero[x][y] && callejero[x][y].length > 0) {
@@ -161,10 +167,13 @@ function pintaPantalla() {
           orienta = "";
           clase = "";
           col = " ";
+          descDia = "";
           desc = "";
         }
         orienta = calle.substring(0, 1);
-        if (callejero[x][y].length >= 2) {
+        const item = callejero[x][y].split("#");
+
+        if (item[0].length >= 2) {
           colstr = callejero[x][y].substring(1, 2);
           if (colstr.trim().length === 0) {
             // col = 3;
@@ -175,21 +184,28 @@ function pintaPantalla() {
         } else {
           // col = 3;
         }
-        if (callejero[x][y].length > 2) {
-          desc += callejero[x][y].substring(2, callejero[x][y].length);
-        } else {
-          desc = "";
+        descDia = "";
+        desc = "";
+        if (item.length > 1) {
+          if (item[1].length > 3 && item[1].substring(0, 3) === "Dia") {
+            descDia = item[1];
+          } else {
+            desc = item[1];
+          }
+        }
+        if (item.length > 2) {
+          desc = item[2];
         }
       }
       id = `id_${x}_${y}`;
-      str += pintaCalle(calle, clase, desc, col, id, orienta);
+      str += pintaCalle(calle, clase, descDia, col, id, orienta, desc);
     }
   }
   $mapa.innerHTML = str;
 }
-function pintaCalle(calle, clase, desc, col, id, orienta) {
+function pintaCalle(calle, clase, descDia, col, id, orienta, desc) {
   return `
-      <article class="item-calle ${clase}" data-id=${id} data-desc="${desc}" data-col="${col}" data-orienta="${orienta}">
+      <article class="item-calle ${clase}" data-id=${id} data-descDia="${descDia}" data-col="${col}" data-orienta="${orienta}" data-desc="${desc}">
         ${calle}
       </article>
     `;

@@ -58,15 +58,18 @@
 .desc {
   position: absolute;
   font-size: 13px;
+  align-content: flex-end;
 }
 
 .calle-h .desc {
-  top: -15px;
+  top: -30px;
+  height: 32px;
 }
 .calle-v .desc {
   writing-mode: tb;
   top: 50px;
-  right: -15px;
+  right: -30px;
+  width: 32px;
 }
 .aqui {
   background-color: green;

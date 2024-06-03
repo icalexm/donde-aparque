@@ -51,7 +51,7 @@ function ObtenVariablesIniciales() {
           .map((e) => e.split(","))
       : [
           ["h0", "v", "h"],
-          ["h Dia 13 (8 a 12)", "v", "h"],
+          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque"],
           ["h", "v", "h"],
           ["h", "v1", "h0"],
         ];
@@ -94,6 +94,7 @@ function pintaPantalla() {
     calle = "",
     colstr = "",
     col = columnas,
+    descDia = "",
     desc = "",
     id = 1;
 
@@ -101,7 +102,8 @@ function pintaPantalla() {
     //console.log(callejero[x]);
     for (let y = 0; y < columnas; y++) {
       console.log(callejero[x][y]);
-      switch (callejero[x][y].substring(0, 1)) {
+      const item = callejero[x][y].split("#");
+      switch (item[0].substring(0, 1)) {
         case "v":
           calle = "calle-v";
           break;
@@ -114,8 +116,8 @@ function pintaPantalla() {
           alert(`el callejero está mal definido ${callejero[x][y]}`);
           break;
       }
-      if (callejero[x][y].length >= 2) {
-        colstr = callejero[x][y].substring(1, 2);
+      if (item[0].length >= 2) {
+        colstr = item[0].substring(1, 2);
         if (colstr.trim().length === 0) {
           col = 3;
         } else {
@@ -125,12 +127,19 @@ function pintaPantalla() {
       } else {
         col = 3;
       }
-      if (callejero[x][y].length > 2) {
-        desc += callejero[x][y].substring(2, callejero[x][y].length);
-      } else {
-        desc = "";
+      descDia = "";
+      desc = "";
+      if (item.length > 1) {
+        if (item[1].length > 3 && item[1].substring(0, 3) === "Dia") {
+          descDia = item[1];
+        } else {
+          desc = item[1];
+        }
       }
-      str += pintaCalle(calle, col, desc, id);
+      if (item.length > 2) {
+        desc = item[2];
+      }
+      str += pintaCalle(calle, col, descDia, desc, id);
       id += col;
     }
   }
@@ -138,7 +147,7 @@ function pintaPantalla() {
   $miBarrio.innerHTML = str;
 }
 
-function pintaCalle(calle, col, desc, id) {
+function pintaCalle(calle, col, descDia, desc, id) {
   if (col === 0) {
     return `
       <article class="${calle} ">
@@ -147,7 +156,7 @@ function pintaCalle(calle, col, desc, id) {
   }
   let str = `
       <article class="${calle} ">
-        <div class="desc">${desc}</div>
+        <div class="desc">${desc} ${descDia}</div>
         <div class="callePos">
         `;
   if (col >= 1) {
