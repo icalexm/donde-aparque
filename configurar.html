@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/car.png" />
+    <link rel="apple-touch-icon" href="img/car.png" />
+    <title>Configuración. Donde aparqué el coche.</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h3>Configuración mapa</h3>
+    <section class="config-mi-barrio">
+      <article class="datos">
+        <div class="dato">
+          <label for="cols">Columnas:</label>
+          <input id="cols" type="number"></input>
+        </div>
+        <div class="dato">
+          <label for="filas">Filas:</label>
+          <input id="filas" type="number"></input>
+        </div>
+      </article>
+      <button class="btn confirColFil">Confirmar</button>
+
+      <h4>Mapa</h4>
+      <article class="mapa" id="mapa"></article>
+
+      <article class="datos none" id="datos">
+        <div class="dato">
+          <label for="id">ID:</label>
+          <input id="id" type="text"></input>
+        </div>
+        <div class="dato">
+          <label for="orientacion">Orientación:</label>
+          <select name="orienta" id="orientacion">
+            <option value=" ">Escojer la orientación</option>
+            <option value="h">Horizontal</option>
+            <option value="v">Vertical</option>
+          </select>
+        </div>
+        <div class="dato">
+          <label for="dividir">División calle:</label>
+          <select name="div" id="dividir">
+            <option value="">Por defecto = 3</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+       </div>
+        <div class="dato">
+          <label for="diaLimpia">Dia limpieza:</label>
+          <input id="diaLimpia" type="number" min="0" max="31"></input>
+        </div>
+        <div class="dato">
+          <label for="horaIniLimpieza">Hora inicio limpieza:</label>
+          <input id="horaIniLimpieza" type="number" min="0" max="24"></input>
+        </div>
+        <div class="dato">
+          <label for="horaFinLimpieza">Hora finaliza limpieza:</label>
+          <input id="horaFinLimpieza" type="number" min="0" max="24"></input>
+        </div>
+        <button class="btn confirGuardar">Guardar</button>
+      </article>
+    </section>
+    <a type="button" class="btn configurar" href="/index.html">Regresar</a>
+    <script src="js/config.js" type="module"></script>
+  </body>
+</html>

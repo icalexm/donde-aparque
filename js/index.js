@@ -1,12 +1,7 @@
 const $miBarrio = window.miBarrio;
-const columnas = 3,
-  filas = 4,
-  callejero = [
-    ["h0", "v", "h"],
-    ["h Dia 13 (8 a 12)", "v", "h"],
-    ["h", "v", "h"],
-    ["h", "v1", "h0"],
-  ];
+let columnas = 0,
+  filas = 0,
+  callejero = [];
 
 document.addEventListener("touchstart", (e) => {
   pulsa(e.target);
@@ -16,6 +11,7 @@ document.addEventListener("click", (e) => {
   pulsa(e.target);
 });
 document.addEventListener("DOMContentLoaded", (e) => {
+  ObtenVariablesIniciales();
   pintaPantalla();
   const aqui = localStorage.getItem("marcat"),
     fechaStr = localStorage.getItem("marcatData");
@@ -25,6 +21,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     window.ultimaFichada.innerHTML = fechaStr;
   }
 });
+
 function pulsa(el) {
   if (el.classList.contains("posicion")) {
     document.querySelectorAll(".aqui").forEach((element) => {
@@ -41,6 +38,23 @@ function pulsa(el) {
     //$input.value = localStorage.getItem("wpSearch");
     //localStorage.removeItem("wpSearch");
   }
+}
+
+function ObtenVariablesIniciales() {
+  columnas = localStorage.getItem("mapaColumnas") | 3;
+  filas = localStorage.getItem("mapFilas") | 4;
+  callejero =
+    localStorage.getItem("mapa") !== null
+      ? localStorage
+          .getItem("mapa")
+          .split("|")
+          .map((e) => e.split(","))
+      : [
+          ["h0", "v", "h"],
+          ["h Dia 13 (8 a 12)", "v", "h"],
+          ["h", "v", "h"],
+          ["h", "v1", "h0"],
+        ];
 }
 
 function pintaPantalla() {

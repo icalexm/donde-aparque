@@ -1,3 +1,7 @@
+:root {
+  --mapaCols: 0;
+  --mapaFilas: 0;
+}
 .mi-barrio {
   display: grid;
   background-color: azure;
@@ -78,4 +82,45 @@
 .calle-v .callePos {
   grid-template-columns: 25px 25px;
   grid-template-rows: 50px 50px 50px;
+}
+
+.btn {
+  margin-left: 85%;
+  padding: 4px;
+  border-radius: 5px;
+  background-color: aquamarine;
+  color: blue;
+  border: 1px solid blue;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+.none {
+  display: none;
+}
+
+.config-mi-barrio {
+  & .dato {
+    display: flex;
+    flex-direction: row;
+
+    & label {
+      width: 200px;
+    }
+  }
+  & .mapa {
+    display: grid;
+    grid-template-columns: repeat(var(--mapaCols), 30px);
+    & .item-calle {
+      background-color: aquamarine;
+      margin: 5px;
+      &.item-h {
+        border-top: 5px solid blue;
+        border-bottom: 5px solid blue;
+      }
+      &.item-v {
+        border-right: 5px solid blue;
+        border-left: 5px solid blue;
+      }
+    }
+  }
 }
