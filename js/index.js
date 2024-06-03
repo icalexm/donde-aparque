@@ -27,9 +27,12 @@ document.addEventListener("touchstart", (e) => {
 
 document.addEventListener("click", (e) => {
   console.log("click:", e, e.target);
-  if (e.target.classList.contains("configurarMapa")) {
+  if (e.target.classList.contains("configurar")) {
     mapaCalles.classList.toggle("none");
     mapaConfig.classList.toggle("none");
+    if (mapaConfig.classList.contains("none")) {
+      pintaPantallaMapa();
+    }
     return;
   }
   if (e.target.classList.contains("item-calle")) {
