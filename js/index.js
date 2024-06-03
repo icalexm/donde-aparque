@@ -41,8 +41,16 @@ function pulsa(el) {
 }
 
 function ObtenVariablesIniciales() {
-  columnas = localStorage.getItem("mapaColumnas") | 3;
-  filas = localStorage.getItem("mapFilas") | 4;
+  columnas = localStorage.getItem("mapaCols")
+    ? localStorage.getItem("mapaCols")
+    : 4;
+  filas = localStorage.getItem("mapFilas")
+    ? localStorage.getItem("mapFilas")
+    : 4;
+
+  document.documentElement.style.setProperty("--mapaCols", columnas);
+  document.documentElement.style.setProperty("--mapaFilas", filas);
+
   callejero =
     localStorage.getItem("mapa") !== null
       ? localStorage
@@ -50,10 +58,10 @@ function ObtenVariablesIniciales() {
           .split("|")
           .map((e) => e.split(","))
       : [
-          ["h0", "v", "h"],
-          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque"],
-          ["h", "v", "h"],
-          ["h", "v1", "h0"],
+          ["h0", "v", "h", "v"],
+          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque", "v"],
+          ["h", "v", "h", "v1"],
+          ["h", "v1", "h0", "v0"],
         ];
 }
 

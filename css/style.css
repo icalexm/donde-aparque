@@ -6,6 +6,7 @@
   display: grid;
   background-color: azure;
   grid-template-columns: 150px 50px 150px;
+  grid-template-columns: repeat(calc(var(--mapaCols) / 2), 150px 50px);
 }
 
 .calle-h,

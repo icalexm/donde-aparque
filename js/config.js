@@ -1,7 +1,11 @@
 const $mapa = window.mapa,
   $datos = window.datos;
-let mapaCols = localStorage.getItem("mapaCols") | 3,
-  mapFilas = localStorage.getItem("mapFilas") | 4,
+let mapaCols = localStorage.getItem("mapaCols")
+    ? localStorage.getItem("mapaCols")
+    : 4,
+  mapFilas = localStorage.getItem("mapFilas")
+    ? localStorage.getItem("mapFilas")
+    : 4,
   callejero =
     localStorage.getItem("mapa") !== null
       ? localStorage
@@ -9,10 +13,10 @@ let mapaCols = localStorage.getItem("mapaCols") | 3,
           .split("|")
           .map((e) => e.split(","))
       : [
-          ["h0", "v", "h"],
-          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque"],
-          ["h", "v", "h"],
-          ["h", "v1", "h0"],
+          ["h0", "v", "h", "v"],
+          ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque", "v"],
+          ["h", "v", "h", "v1"],
+          ["h", "v1", "h0", "v0"],
         ];
 
 document.addEventListener("DOMContentLoaded", (e) => {
@@ -108,7 +112,7 @@ function clickItemCalle(e) {
     desc = $el.dataset.desc;
   window.id.value = id;
   window.orientacion.value = orienta;
-  window.dividir.value = orienta;
+  window.dividir.value = col;
   window.desc.value = desc;
   window.diaLimpia.value = dia;
   window.horaIniLimpieza.value = ini;
@@ -117,7 +121,7 @@ function clickItemCalle(e) {
 }
 
 function pintaPantalla() {
-  cols.value = mapaCols;
+  cols.value = parseInt(mapaCols);
   filas.value = mapFilas;
   document.documentElement.style.setProperty("--mapaCols", mapaCols);
   document.documentElement.style.setProperty("--mapaFilas", mapFilas);
@@ -138,9 +142,14 @@ function pintaPantalla() {
     //console.log(callejero[x]);
     for (let y = 0; y < mapaCols; y++) {
       if (!callejero[x] || !callejero[x][y]) {
-        calle = "?";
+        if (y === 1 || (y === 3) | (y === 5) | (y === 7)) {
+          calle = "v";
+          clase = "item-v";
+        } else {
+          calle = "h";
+          clase = "item-h";
+        }
         orienta = "";
-        clase = "";
         col = " ";
         descDia = "";
         desc = "";
@@ -163,9 +172,14 @@ function pintaPantalla() {
               break;
           }
         } else {
-          calle = "?";
+          if (y === 1 || (y === 3) | (y === 5) | (y === 7)) {
+            calle = "v";
+            clase = "item-v";
+          } else {
+            calle = "h";
+            clase = "item-h";
+          }
           orienta = "";
-          clase = "";
           col = " ";
           descDia = "";
           desc = "";
@@ -176,13 +190,13 @@ function pintaPantalla() {
         if (item[0].length >= 2) {
           colstr = callejero[x][y].substring(1, 2);
           if (colstr.trim().length === 0) {
-            // col = 3;
+            col = 3;
           } else {
             col = parseInt(colstr);
             calle += col.toString();
           }
         } else {
-          // col = 3;
+          col = 3;
         }
         descDia = "";
         desc = "";

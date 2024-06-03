@@ -14,7 +14,13 @@
       <article class="datos">
         <div class="dato">
           <label for="cols">Columnas:</label>
-          <input id="cols" type="number"></input>
+          <select name="cols" id="cols">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>  
+                      <option value="8">8</option>
+          </select>
+
         </div>
         <div class="dato">
           <label for="filas">Filas:</label>
@@ -29,11 +35,11 @@
       <article class="datos none" id="datos">
         <div class="dato">
           <label for="id">ID:</label>
-          <input id="id" type="text"></input>
+          <input id="id" type="text" disabled></input>
         </div>
         <div class="dato">
           <label for="orientacion">Orientación:</label>
-          <select name="orienta" id="orientacion">
+          <select name="orienta" id="orientacion" disabled>
             <option value=" ">Escojer la orientación</option>
             <option value="h">Horizontal</option>
             <option value="v">Vertical</option>
@@ -42,19 +48,19 @@
         <div class="dato">
           <label for="dividir">División calle:</label>
           <select name="div" id="dividir">
-            <option value="">Por defecto = 3</option>
+            <option value="3">Por defecto = 3</option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
           </select>
        </div>
+       <div class="dato">
+        <label for="desc">Descripción:</label>
+        <input id="desc" type="text"></input>
+      </div>
         <div class="dato">
           <label for="diaLimpia">Dia limpieza:</label>
           <input id="diaLimpia" type="number" min="0" max="31"></input>
-        </div>
-         <div class="dato">
-          <label for="desc">Descripción:</label>
-          <input id="desc" type="text"></input>
         </div>
         <div class="dato">
           <label for="horaIniLimpieza">Hora inicio limpieza:</label>
