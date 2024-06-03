@@ -34,12 +34,12 @@ function clickConfirColFil(e) {
     alert("tiene que especificar las columnas que tiene la calle");
     return;
   }
-  if (filas.value <= 0) {
+  if (mapFilas.value <= 0) {
     alert("tiene que especificar las filas que tiene la calle");
     return;
   }
   mapaCols = cols.value;
-  mapFilas = filas.value;
+  mapFilas = mapFilas.value;
   localStorage.setItem("mapaCols", mapaCols);
   localStorage.setItem("mapFilas", mapFilas);
   pintaPantalla();
@@ -122,7 +122,7 @@ function clickItemCalle(e) {
 
 function pintaPantalla() {
   cols.value = parseInt(mapaCols);
-  filas.value = mapFilas;
+  mapFilas.value = mapFilas;
   document.documentElement.style.setProperty("--mapaCols", mapaCols);
   document.documentElement.style.setProperty("--mapaFilas", mapFilas);
 
