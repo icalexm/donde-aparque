@@ -2,16 +2,31 @@ const $miBarrio = window.miBarrio,
   $mapaCalles = document.get,
   $mapa = window.mapa,
   $datos = window.datos;
-let mapaCols = localStorage.getItem("mapaCols")
-    ? localStorage.getItem("mapaCols")
-    : 4,
-  mapFilas = localStorage.getItem("mapFilas")
-    ? localStorage.getItem("mapFilas")
-    : 4,
+let llistaMapa = localStorage.getItem("llistaMapa")
+    ? localStorage.getItem("llistaMapa")
+    : "casa",
+  nomMapa = llistaMapa.split(",")[0],
+  nomCols = "",
+  nomFilas = "",
+  mapaCols = 0,
+  mapaFilas = 0,
+  callejero = "";
+
+document.addEventListener("touchstart", (e) => {
+  pulsa(e.target);
+});
+
+function CargarMapa() {
+  nomCols = nomMapa + "Cols";
+  nomFilas = nomMapa + "Filas";
+  mapaCols = localStorage.getItem(nomCols) ? localStorage.getItem(nomCols) : 4;
+  mapaFilas = localStorage.getItem(nomFilas)
+    ? localStorage.getItem(nomFilas)
+    : 4;
   callejero =
-    localStorage.getItem("mapa") !== null
+    localStorage.getItem(nomMapa) !== null
       ? localStorage
-          .getItem("mapa")
+          .getItem(nomMapa)
           .split("|")
           .map((e) => e.split(","))
       : [
@@ -20,13 +35,27 @@ let mapaCols = localStorage.getItem("mapaCols")
           ["h", "v", "h", "v1"],
           ["h", "v1", "h0", "v0"],
         ];
+}
 
-document.addEventListener("touchstart", (e) => {
-  pulsa(e.target);
-});
+function PintaInicial() {
+  document.documentElement.style.setProperty("--mapaCols", mapaCols);
+  document.documentElement.style.setProperty("--mapaFilas", mapaFilas);
+  pintaPantallaMapa();
+  const aqui = localStorage.getItem("marcat"),
+    fechaStr = localStorage.getItem("marcatData");
+  if (aqui) {
+    let $aqui = document.getElementById(aqui);
+    if ($aqui) $aqui.classList.add("aqui");
+    window.ultimaFichada.innerHTML = fechaStr;
+    if (nomMapa) window.nomMapaActual.innerHTML = nomMapa + " - ";
+  }
+  pintaPantalla();
+  LimpiaModif();
+  llenaListaMapas();
+}
 
 document.addEventListener("click", (e) => {
-  console.log("click:", e, e.target);
+  //console.log("click:", e, e.target);
   if (e.target.classList.contains("configurar")) {
     mapaCalles.classList.toggle("none");
     mapaConfig.classList.toggle("none");
@@ -47,22 +76,24 @@ document.addEventListener("click", (e) => {
     clickConfirGuardar(e);
     return;
   }
+  if (e.target.classList.contains("confirNouMapa")) {
+    clickNuevoNomMapa(e);
+    return;
+  }
+
   pulsa(e.target);
 });
 document.addEventListener("DOMContentLoaded", (e) => {
   //ObtenVariablesIniciales();
-  document.documentElement.style.setProperty("--mapaCols", mapaCols);
-  document.documentElement.style.setProperty("--mapaFilas", mapFilas);
-  pintaPantallaMapa();
-  const aqui = localStorage.getItem("marcat"),
-    fechaStr = localStorage.getItem("marcatData");
-  if (aqui) {
-    let $aqui = document.getElementById(aqui);
-    if ($aqui) $aqui.classList.add("aqui");
-    window.ultimaFichada.innerHTML = fechaStr;
-  }
-  pintaPantalla();
-  LimpiaModif();
+  CargarMapa();
+  PintaInicial();
+});
+
+llistaMapas.addEventListener("change", (e) => {
+  console.log("change", e.target.value);
+  nomMapa = e.target.value;
+  CargarMapa();
+  PintaInicial();
 });
 
 function pulsa(el) {
@@ -83,64 +114,7 @@ function pulsa(el) {
   }
 }
 
-// function ObtenVariablesIniciales() {
-//   mapaCols = localStorage.getItem("mapaCols")
-//     ? localStorage.getItem("mapaCols")
-//     : 4;
-//   mapFilas = localStorage.getItem("mapFilas")
-//     ? localStorage.getItem("mapFilas")
-//     : 4;
-
-//   document.documentElement.style.setProperty("--mapaCols", mapaCols);
-//   document.documentElement.style.setProperty("--mapaFilas", mapFilas);
-
-//   callejero =
-//     localStorage.getItem("mapa") !== null
-//       ? localStorage
-//           .getItem("mapa")
-//           .split("|")
-//           .map((e) => e.split(","))
-//       : [
-//           ["h0", "v", "h", "v"],
-//           ["h#Dia 13 (8 a 12)#Hosp", "v", "h#Parque", "v"],
-//           ["h", "v", "h", "v1"],
-//           ["h", "v1", "h0", "v0"],
-//         ];
-// }
-
 function pintaPantallaMapa() {
-  // let str = "",
-  //   i = 1,
-  //   col = 3;
-  // col = 0;
-  // str += pintaCalle("calle-h", col, "", i);
-  // col = 3;
-  // i += col;
-  // str += pintaCalle("calle-v", col, "", i);
-  // i += col;
-  // str += pintaCalle("calle-h", col, "", i);
-  // i += col;
-
-  // str += pintaCalle("calle-h", col, "Dia 13 (8 a 12)", i);
-  // i += col;
-  // str += pintaCalle("calle-v", col, "", i);
-  // i += col;
-  // str += pintaCalle("calle-h", col, "", i);
-  // i += col;
-
-  // str += pintaCalle("calle-h", col, "", i);
-  // i += col;
-  // str += pintaCalle("calle-v", col, "", i);
-  // i += col;
-  // str += pintaCalle("calle-h", col, "", i);
-  // i += col;
-
-  // str += pintaCalle("calle-h", col, "", i);
-  // i += col;
-  // col = 1;
-  // str += pintaCalle("calle-v", col, "", i);
-  // i += col;
-
   let str = "",
     calle = "",
     colstr = "",
@@ -149,9 +123,10 @@ function pintaPantallaMapa() {
     desc = "",
     id = 1;
 
-  for (let x = 0; x < mapFilas; x++) {
+  for (let x = 0; x < mapaFilas; x++) {
     //console.log(callejero[x]);
     for (let y = 0; y < mapaCols; y++) {
+      // if (!callejero[x][y]) break;
       console.log(callejero[x][y]);
       const item = callejero[x][y].split("#");
       switch (item[0].substring(0, 1)) {
@@ -242,14 +217,14 @@ function clickConfirColFil(e) {
     alert("tiene que especificar las columnas que tiene la calle");
     return;
   }
-  if (mapFilas.value <= 0) {
+  if (filas.value <= 0) {
     alert("tiene que especificar las filas que tiene la calle");
     return;
   }
   mapaCols = cols.value;
-  mapFilas = mapFilas.value;
-  localStorage.setItem("mapaCols", mapaCols);
-  localStorage.setItem("mapFilas", mapFilas);
+  mapaFilas = filas.value;
+  localStorage.setItem(nomCols, mapaCols);
+  localStorage.setItem(nomFilas, mapaFilas);
   pintaPantalla();
 }
 function clickConfirGuardar(e) {
@@ -280,7 +255,25 @@ function clickConfirGuardar(e) {
     y = parseInt(idxy[2]);
   //console.log(x, y, callejero[x][y]);
   if (!callejero[x]) {
-    callejero.push([str]);
+    for (let i = 0; i < mapaCols; i++) {
+      if (i === y) {
+        if (i === 0) {
+          callejero.push([str]);
+        } else {
+          callejero[x].push([str]);
+        }
+      } else {
+        if (i === 1 || (i === 3) | (i === 5) | (i === 7)) {
+          callejero[x].push(["v"]);
+        } else {
+          if (i === 0) {
+            callejero.push(["h"]);
+          } else {
+            callejero[x].push(["h"]);
+          }
+        }
+      }
+    }
   } else {
     if (!callejero[x][y]) {
       callejero[x].push(str);
@@ -289,7 +282,7 @@ function clickConfirGuardar(e) {
     }
   }
 
-  localStorage.setItem("mapa", callejero.join("|"));
+  localStorage.setItem(nomMapa, callejero.join("|"));
   LimpiaModif();
   $datos.classList.add("none");
   pintaPantalla();
@@ -330,11 +323,11 @@ function clickItemCalle(e) {
 
 function pintaPantalla() {
   window.cols.value = parseInt(mapaCols);
-  window.filas.value = mapFilas;
+  window.filas.value = mapaFilas;
   document.documentElement.style.setProperty("--mapaCols", mapaCols);
-  document.documentElement.style.setProperty("--mapaFilas", mapFilas);
+  document.documentElement.style.setProperty("--mapaFilas", mapaFilas);
 
-  $mapa.innerHTML = "";
+  $mapa.innerHTML = "a";
 
   let str = "",
     calle = "",
@@ -346,7 +339,7 @@ function pintaPantalla() {
     desc = "",
     id = 1;
 
-  for (let x = 0; x < mapFilas; x++) {
+  for (let x = 0; x < mapaFilas; x++) {
     //console.log(callejero[x]);
     for (let y = 0; y < mapaCols; y++) {
       if (!callejero[x] || !callejero[x][y]) {
@@ -357,8 +350,9 @@ function pintaPantalla() {
           calle = "h";
           clase = "item-h";
         }
+        callejero[x][y] = calle;
         orienta = "";
-        col = " ";
+        col = 3;
         descDia = "";
         desc = "";
       } else {
@@ -387,8 +381,9 @@ function pintaPantalla() {
             calle = "h";
             clase = "item-h";
           }
+          callejero[x][y] = calle;
           orienta = "";
-          col = " ";
+          col = 3;
           descDia = "";
           desc = "";
         }
@@ -419,10 +414,12 @@ function pintaPantalla() {
           desc = item[2];
         }
       }
+      if (orienta === "") orienta = calle;
       id = `id_${x}_${y}`;
       str += pintaCalle(calle, clase, descDia, col, id, orienta, desc);
     }
   }
+  localStorage.setItem(nomMapa, callejero.join("|"));
   $mapa.innerHTML = str;
 }
 function pintaCalle(calle, clase, descDia, col, id, orienta, desc) {
@@ -431,4 +428,37 @@ function pintaCalle(calle, clase, descDia, col, id, orienta, desc) {
         ${calle}
       </article>
     `;
+}
+function llenaListaMapas() {
+  const $llistaMapas = window.llistaMapas;
+
+  while ($llistaMapas.firstElementChild) {
+    $llistaMapas.firstElementChild.remove();
+  }
+
+  llistaMapa.split(",").forEach((mapa) => {
+    const map = document.createElement("option");
+    map.setAttribute("value", mapa);
+    if (nomMapa === mapa) {
+      map.setAttribute("selected", true);
+    }
+    map.innerHTML = mapa;
+    $llistaMapas.append(map);
+  });
+}
+function clickNuevoNomMapa() {
+  const valor = window.nomMapa.value.trim();
+  if (valor.length === 0) {
+    alert("Falta especificar el nombre del mapa");
+    return;
+  }
+  if (llistaMapa.indexOf(valor) > -1) {
+    alert("Ya existe el nombre del mapa");
+    return;
+  }
+  llistaMapa += "," + valor;
+  localStorage.setItem("llistaMapa", llistaMapa);
+  nomMapa = valor;
+  CargarMapa();
+  PintaInicial();
 }

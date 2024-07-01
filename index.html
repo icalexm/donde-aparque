@@ -14,7 +14,7 @@
   </head>
   <body>
     <div id="mapaCalles">
-      <h3>Última fichada <span id="ultimaFichada"></span></h3>
+      <h3><span id="nomMapaActual"></span>Última fichada <span id="ultimaFichada"></span></h3>
       <section class="mi-barrio" id="miBarrio"></section>
       <a type="button" class="btn configurar configurarMapa">Configurar</a>
     </div>
@@ -23,6 +23,16 @@
     <section class="config-mi-barrio">
       <article class="datos">
         <div class="dato">
+          <label for="nomMapa">Nou mapa:</label>
+          <input id="nomMapa" type="text"></input>
+        </div>
+      <button class="btn confirNouMapa">Afgregar nuevo mapa</button>
+        <div class="dato">
+          <label for="llistaMapas">Mapa actual:</label>
+          <select name="llistaMapas" id="llistaMapas">
+          </select>
+        </div>
+     <div class="dato">
           <label for="cols">Columnas:</label>
           <select name="cols" id="cols">
             <option value="2">2</option>

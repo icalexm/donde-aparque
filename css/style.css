@@ -1,3 +1,15 @@
+html {
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 :root {
   --mapaCols: 0;
   --mapaFilas: 0;
@@ -5,7 +17,6 @@
 .mi-barrio {
   display: grid;
   background-color: azure;
-  grid-template-columns: 150px 50px 150px;
   grid-template-columns: repeat(calc(var(--mapaCols) / 2), 150px 50px);
 }
 
@@ -116,6 +127,8 @@
     grid-template-columns: repeat(var(--mapaCols), 30px);
     & .item-calle {
       background-color: aquamarine;
+      width: 25px;
+      height: 25px;
       margin: 5px;
       &.item-h {
         border-top: 5px solid blue;
