@@ -23,11 +23,16 @@ body {
 :root {
   --mapaCols: 0;
   --mapaFilas: 0;
+  --colorPeligor: red;
+  --colorAlerta: orange;
+  --colorPrecaucion: yellow;
+  --colorNormal: azure;
+  --colorFondo: var(var(--colorNormal));
 }
 
 .mi-barrio {
   display: grid;
-  background-color: azure;
+  background-color: var(--colorFondo);
   grid-template-columns: repeat(calc(var(--mapaCols) / 2), 150px 50px);
 }
 

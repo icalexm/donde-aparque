@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
   //ObtenVariablesIniciales();
   CargarMapa();
   PintaInicial();
+  ControlFecha();
 });
 
 llistaMapas.addEventListener("change", (e) => {
@@ -94,6 +95,7 @@ llistaMapas.addEventListener("change", (e) => {
   nomMapa = e.target.value;
   CargarMapa();
   PintaInicial();
+  ControlFecha();
 });
 
 function pulsa(el) {
@@ -111,6 +113,7 @@ function pulsa(el) {
     localStorage.setItem("marcatData", fechaStr);
     //$input.value = localStorage.getItem("wpSearch");
     //localStorage.removeItem("wpSearch");
+    ControlFecha();
   }
 }
 
@@ -121,13 +124,13 @@ function pintaPantallaMapa() {
     col = mapaCols,
     descDia = "",
     desc = "",
-    id = 1;
+    id = 1,
+    diaLimpieza = "";
 
   for (let x = 0; x < mapaFilas; x++) {
     //console.log(callejero[x]);
     for (let y = 0; y < mapaCols; y++) {
       // if (!callejero[x][y]) break;
-      console.log(callejero[x][y]);
       const item = callejero[x][y].split("#");
       switch (item[0].substring(0, 1)) {
         case "v":
@@ -155,17 +158,20 @@ function pintaPantallaMapa() {
       }
       descDia = "";
       desc = "";
+      diaLimpieza = "";
       if (item.length > 1) {
         if (item[1].length > 3 && item[1].substring(0, 3) === "Dia") {
           descDia = item[1];
+          diaLimpieza = item[1].split(" ")[1];
         } else {
           desc = item[1];
+          console.log("dia (desc)", desc);
         }
       }
       if (item.length > 2) {
         desc = item[2];
       }
-      str += pintaCalleMapa(calle, col, descDia, desc, id);
+      str += pintaCalleMapa(calle, col, descDia, desc, id, diaLimpieza);
       id += col;
     }
   }
@@ -173,7 +179,7 @@ function pintaPantallaMapa() {
   $miBarrio.innerHTML = str;
 }
 
-function pintaCalleMapa(calle, col, descDia, desc, id) {
+function pintaCalleMapa(calle, col, descDia, desc, id, diaLimpieza) {
   if (col === 0) {
     return `
       <article class="${calle} ">
@@ -181,7 +187,7 @@ function pintaCalleMapa(calle, col, descDia, desc, id) {
     `;
   }
   let str = `
-      <article class="${calle} ">
+      <article class="calle ${calle}" data-dialimpieza="${diaLimpieza}">
         <div class="desc">${desc} ${descDia}</div>
         <div class="callePos">
         `;
@@ -210,7 +216,76 @@ function pintaCalleMapa(calle, col, descDia, desc, id) {
   return str;
 }
 
-//Config
+function ControlFecha() {
+  const root = document.documentElement,
+    fechaActual = new Date(),
+    $aqui = document.querySelector(".aqui"),
+    $calle = $aqui.closest(".calle");
+  fechaActual.setHours(0, 0, 0, 0); // Establecer la hora, minutos, segundos y milisegundos a 0
+
+  if (!$calle) return;
+
+  let diaLimpia = $calle.dataset.dialimpieza;
+
+  if (!diaLimpia) return;
+
+  let diaLimpiaNum = parseInt(diaLimpia);
+  let diaActual = fechaActual.getDate();
+  let mesActual = fechaActual.getMonth(); // Los meses en JavaScript van de 0 (Enero) a 11 (Diciembre)
+  let añoActual = fechaActual.getFullYear();
+  let mesLimpia = mesActual;
+  let añoLimpia = añoActual;
+
+  if (diaLimpiaNum < diaActual) {
+    // Si el día de limpieza es superior al día actual, usa el mes anterior
+    mesLimpia += 1;
+    if (mesLimpia > 11) {
+      // Si el mes se convierte en negativo (es decir, pasamos de Enero al año anterior)
+      mesLimpia = 0;
+      añoLimpia += 1;
+    }
+  }
+
+  let fechaLimpia = new Date(añoLimpia, mesLimpia, diaLimpiaNum);
+
+  // Calcular la diferencia en días
+  let diferenciaEnMilisegundos = fechaLimpia - fechaActual;
+  let diferenciaEnDias = Math.floor(
+    diferenciaEnMilisegundos / (1000 * 60 * 60 * 24)
+  );
+  //let fecParquing = new Date(`${fec.getPropertyValue}`)
+
+  console.log($calle, diaLimpia, diferenciaEnDias);
+  //if ((fec = fechaStr)) {
+  //  element.style.setProperty(
+  //    "--colorFondo",
+  //    element.style.getPropertyValue("--colorPeligor")
+  //  );
+  //}
+  let color = getComputedStyle(root).getPropertyValue("--colorNormal");
+
+  switch (true) {
+    case diferenciaEnDias >= 0 && diferenciaEnDias <= 1:
+      color = getComputedStyle(root).getPropertyValue("--colorPeligor");
+      break;
+
+    case diferenciaEnDias >= 2 && diferenciaEnDias <= 3:
+      color = getComputedStyle(root).getPropertyValue("--colorAlerta");
+      break;
+
+    case diferenciaEnDias >= 4 && diferenciaEnDias <= 6:
+      color = getComputedStyle(root).getPropertyValue("--colorPrecaucion");
+      break;
+
+    default:
+      break;
+  }
+  root.style.setProperty("--colorFondo", color);
+}
+
+// ************************************
+// ************** Config **************
+// ************************************
 
 function clickConfirColFil(e) {
   if (cols.value <= 0) {
