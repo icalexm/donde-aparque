@@ -217,17 +217,26 @@ function pintaCalleMapa(calle, col, descDia, desc, id, diaLimpieza) {
 }
 
 function ControlFecha() {
+  document.documentElement.style.setProperty(
+    "--colorFondo",
+    ControlFechaSegunDia()
+  );
+}
+
+function ControlFechaSegunDia() {
   const root = document.documentElement,
     fechaActual = new Date(),
     $aqui = document.querySelector(".aqui"),
     $calle = $aqui.closest(".calle");
   fechaActual.setHours(0, 0, 0, 0); // Establecer la hora, minutos, segundos y milisegundos a 0
 
-  if (!$calle) return;
+  let color = getComputedStyle(root).getPropertyValue("--colorNormal");
+
+  if (!$calle) return color;
 
   let diaLimpia = $calle.dataset.dialimpieza;
 
-  if (!diaLimpia) return;
+  if (!diaLimpia) return color;
 
   let diaLimpiaNum = parseInt(diaLimpia);
   let diaActual = fechaActual.getDate();
@@ -262,7 +271,6 @@ function ControlFecha() {
   //    element.style.getPropertyValue("--colorPeligor")
   //  );
   //}
-  let color = getComputedStyle(root).getPropertyValue("--colorNormal");
 
   switch (true) {
     case diferenciaEnDias >= 0 && diferenciaEnDias <= 1:
@@ -280,7 +288,7 @@ function ControlFecha() {
     default:
       break;
   }
-  root.style.setProperty("--colorFondo", color);
+  return color;
 }
 
 // ************************************
